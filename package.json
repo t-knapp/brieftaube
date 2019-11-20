@@ -1,0 +1,33 @@
+{
+  "name": "brieftaube",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/t-knapp/brieftaube.git"
+  },
+  "keywords": [
+    "msg",
+    ".msg",
+    "eml",
+    ".eml",
+    "outlook",
+    "mail",
+    "e-mail",
+    "thunderbird",
+    "convert"
+  ],
+  "author": "t-knapp",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/t-knapp/brieftaube/issues"
+  },
+  "homepage": "https://github.com/t-knapp/brieftaube#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
