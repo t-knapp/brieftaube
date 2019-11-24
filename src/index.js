@@ -1,14 +1,21 @@
 const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const fileUpload = require('express-fileupload');
+
 const convert = require('./service/converter');
+const randomString = require('./helper/helper');
+const Paths = require('./service/paths');
 
 const port = 3000;
 
+const paths = new Paths('/tmp/brieftaube/');
+
 const app = express();
+
 app.use(fileUpload({
     useTempFiles : true,
-    tempFileDir : '/tmp/brieftaube/'
+    tempFileDir : paths.getUploadPath()
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -21,8 +28,8 @@ app.post('/upload', async function(req, res) {
     // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
     let sampleFile = req.files.sampleFile;
 
-    const sourceFilePath = `/tmp/brieftaube/pending/${makeid(16)}`;
-    const destFilePath = `/tmp/brieftaube/done/${sampleFile.name}.eml`;
+    const sourceFilePath = paths.getPendingPath(randomString(16));
+    const destFilePath = paths.getDonePath(`${sampleFile.name}.eml`);
     sampleFile.mv(sourceFilePath, async (mvError) => {
         if (mvError)
             return res.status(500).send(mvError);
@@ -32,18 +39,12 @@ app.post('/upload', async function(req, res) {
         res.download(destFilePath, (err) => {
             if(err)
                 console.error('Error:', err);
+            else {
+                fs.unlinkSync(sourceFilePath);
+                fs.unlinkSync(destFilePath);
+            } 
         });
     });
 });
 
-app.listen(port, () => console.log(`brieftaube listens on port ${port}!`))
-
-function makeid(length) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
+app.listen(port, () => console.log(`brieftaube listens on port ${port}!`));
