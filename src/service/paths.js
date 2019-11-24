@@ -14,6 +14,10 @@ module.exports = class Paths {
         this.ensureExists(this.donePath);
     }
 
+    getBasePath() {
+        return this.basePath;
+    }
+
     getUploadPath() {
         return this.uploadPath;
     }
